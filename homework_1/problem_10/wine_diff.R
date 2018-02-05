@@ -144,39 +144,17 @@ wine=scan()
 
 y=log(wine)
 times=1:142
-tsq=times^2  #If we wanted quadratic trend we'd add this column to X matrix
 
-Jan=rep(c(1,0,0,0,0,0,0,0,0,0,0,0),12)[1:142]
-Feb=rep(c(0,1,0,0,0,0,0,0,0,0,0,0),12)[1:142]
-Mar=rep(c(0,0,1,0,0,0,0,0,0,0,0,0),12)[1:142]
-Apr=rep(c(0,0,0,1,0,0,0,0,0,0,0,0),12)[1:142]
-May=rep(c(0,0,0,0,1,0,0,0,0,0,0,0),12)[1:142]
-Jun=rep(c(0,0,0,0,0,1,0,0,0,0,0,0),12)[1:142]
-Jul=rep(c(0,0,0,0,0,0,1,0,0,0,0,0),12)[1:142]
-Aug=rep(c(0,0,0,0,0,0,0,1,0,0,0,0),12)[1:142]
-Sep=rep(c(0,0,0,0,0,0,0,0,1,0,0,0),12)[1:142]
-Oct=rep(c(0,0,0,0,0,0,0,0,0,1,0,0),12)[1:142]
-Nov=rep(c(0,0,0,0,0,0,0,0,0,0,1,0),12)[1:142]
-Dec=rep(c(0,0,0,0,0,0,0,0,0,0,0,1),12)[1:142]
-sint=sin(2*pi*times/12)
-cost=cos(2*pi*times/12)
-X=cbind(times,sint,cost,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)  #sin and cos and constant for Jan; 
-X_jan=cbind(times,sint,cost,Jan)  #sin and cos and constant for Jan; 
+# perform 1st order differencing
+y_diff = diff(y,lag=12,differences=1)
 
-pdf('wine_plots/models.pdf')
-lsfit=lm(y~X) #you remove sin/cos and do all months
-lsfit_jan=lm(y~X_jan) #you remove sin/cos and do all months
-plot(times,wine) #plot on original scale
-lines(times,wine) #add lines to existing plot
-lines(times,exp(lsfit$fitted),col="red") #undo log for fitted model
-lines(times,exp(lsfit_jan$fitted),col="blue") #undo log for fitted model
+# plot differences
+diff_times = 1:length(y_diff)
+X=cbind(diff_times)
+pdf('plots/wine_diff_lag12.pdf')
+plot(diff_times, y_diff)
+lsfit = lm(y_diff~X)
+lines(diff_times, lsfit$fitted)
 
-pdf('wine_plots/all_months_acf.pdf')
-acf(lsfit$res,lag.max=15)  #significant correlation
-Box.test(lsfit$res,lag=15,fitdf=0,type="Ljung")   
-
-pdf('wine_plots/jan_acf.pdf')
-acf(lsfit_jan$res,lag.max=15)  #significant correlation
-Box.test(lsfit_jan$res,lag=15,fitdf=0,type="Ljung")   
-#pvalue indicates significant autocorrelation 
-
+# test for autocorrelation
+Box.test(y_diff, lag=15, fitdf=0, type="Ljung")
