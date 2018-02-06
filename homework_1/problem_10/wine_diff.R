@@ -151,7 +151,7 @@ y_diff = diff(y,lag=12,differences=1)
 # plot differences
 diff_times = 1:length(y_diff)
 X=cbind(diff_times)
-pdf('plots/wine_diff_lag12.pdf')
+pdf('../report/figs/problem_10/wine_diff_lag12.pdf')
 plot(diff_times, y_diff)
 lsfit = lm(y_diff~X)
 lines(diff_times, lsfit$fitted)

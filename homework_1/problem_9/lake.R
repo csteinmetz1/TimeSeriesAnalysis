@@ -104,15 +104,17 @@ times=1:98
 X=cbind(times,times^2,times^3)
 cubic_fit=lm(lake~X)
 
+summary(cubic_fit)
+
 # plot data and cubic fit
-pdf('plots/cubic_fit.pdf')
+pdf('../report/figs/problem_9/cubic_fit.pdf')
 plot(times,lake)
 lines(times,lake) #connect the points
 lines(times,cubic_fit$fitted,col='blue')
 
 # Find residuals
 cubic_res=lm(lake~X)$resid
-pdf('plots/cubic_fit_ACF.pdf')
+pdf('../report/figs/problem_9/cubic_fit_ACF.pdf')
 acf(cubic_res)
 Box.test(cubic_res, lag=15, fitdf=0,type="Ljung")
 

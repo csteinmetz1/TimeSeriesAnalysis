@@ -163,19 +163,19 @@ cost=cos(2*pi*times/12)
 X=cbind(times,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)  #sin and cos and constant for Jan; 
 X_jan=cbind(times,sint,cost)  #sin and cos and constant for Jan; 
 
-pdf('plots/models.pdf')
+pdf('../report/figs/problem_7/monthly_model.pdf')
 lsfit=lm(y~X) #you remove sin/cos and do all months
 lsfit_jan=lm(y~X_jan) #you remove sin/cos and do all months
 plot(times,wine) #plot on original scale
 lines(times,wine) #add lines to existing plot
 lines(times,exp(lsfit$fitted),col="red") #undo log for fitted model
-lines(times,exp(lsfit_jan$fitted),col="blue") #undo log for fitted model
+#lines(times,exp(lsfit_jan$fitted),col="blue") #undo log for fitted model
 
-pdf('plots/all_months_acf.pdf')
+pdf('../report/figs/problem_7/all_months_acf.pdf')
 acf(lsfit$res,lag.max=15)  #significant correlation
 Box.test(lsfit$res,lag=15,fitdf=0,type="Ljung")   
 
-pdf('plots/jan_acf.pdf')
+pdf('../report/figs/problem_7/jan_acf.pdf')
 acf(lsfit_jan$res,lag.max=15)  #significant correlation
 Box.test(lsfit_jan$res,lag=15,fitdf=0,type="Ljung")   
 #pvalue indicates significant autocorrelation 

@@ -112,12 +112,12 @@ times=1:length(temp)
 
 #TEST FOR AUTOCORRELATION
 lsres=lm(temp~times)$resid
-pdf('plots/temp_acf.pdf')
+pdf('../report/figs/problem_8/temp_acf.pdf')
 acf(lsres)
 Box.test(lsres,lag=10,fitdf=0)
 
 # Plot raw data
-pdf('plots/temp_ar1_quad.pdf')
+pdf('../report/figs/problem_8/temp_ar1_quad.pdf')
 plot(times,temp)
 lines(times,temp) #connect the points
 
@@ -127,7 +127,7 @@ fit=arima(temp,order=c(1,0,0),xreg=X)
 lines(times,temp-fit$resid,col='blue')
 fit # we find that the t^2 term is not significant
 
-pdf('plots/temp_ar1_lin.pdf')
+pdf('../report/figs/problem_8/temp_ar1_lin.pdf')
 plot(times,temp)
 lines(times,temp) #connect the points
 #Fit linear trend with AR(1) errors

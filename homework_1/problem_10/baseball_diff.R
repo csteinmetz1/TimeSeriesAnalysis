@@ -85,12 +85,14 @@ baseball_diff = diff(baseball,lag=1,differences=1)
 diff_times = 1:length(baseball_diff)
 
 # plot the differenced values
-pdf('plots/baseball_diff_lag1.pdf')
+pdf('../report/figs/problem_10/baseball_diff_lag1.pdf')
 plot(diff_times, baseball_diff)
+lsfit = lm(baseball_diff~diff_times)
+lines(diff_times, lsfit$fitted)
 
 # test for autocorrelation
 Box.test(baseball_diff, lag=15, fitdf=0, type="Ljung")
 
 # plot autocorrelation
-pdf('plots/baseball_diff_ACF.pdf')
+pdf('../report/figs/problem_10/baseball_diff_ACF.pdf')
 acf(baseball_diff)
