@@ -1,0 +1,146 @@
+temp=scan()
+-.4 
+-.37 
+-.43 
+-.47 
+-.72 
+-.54 
+-.47 
+-.54 
+-.39 
+-.19 
+-.4 
+-.44 
+-.44 
+-.49 
+-.38 
+-.41 
+-.27 
+-.18 
+-.38 
+-.22 
+-.03 
+-.09 
+-.28 
+-.36 
+-.49 
+-.25 
+-.17 
+-.45 
+-.32 
+-.33 
+-.32 
+-.29 
+-.32 
+-.25 
+-.05 
+-.12 
+-.26 
+-.48 
+-.37 
+-.2 
+-.15 
+-.08 
+-.14 
+-.13 
+-.12 
+-.1 
+ .13 
+-.01 
+ .06 
+-.17 
+-.01 
+ .09 
+ .05 
+-.16 
+ .05 
+-.02 
+ .04 
+ .17 
+ .19 
+ .05 
+ .15 
+ .13 
+ .09 
+ .04 
+ .11 
+-.03 
+ .03 
+ .15 
+ .04 
+-.02 
+-.13 
+ .02 
+ .07 
+ .2 
+-.03 
+-.07 
+-.19 
+ .09 
+ .11 
+ .06 
+ .01 
+ .08 
+ .02 
+ .02 
+-.27 
+-.18 
+-.09 
+-.02 
+-.13 
+ .02 
+ .03 
+-.12 
+-.08 
+ .17 
+-.09 
+-.04 
+-.24 
+ .16 
+ .09 
+ .12 
+ .27 
+ .42 
+ .02 
+ .3 
+ .09 
+ .05 
+ .17 
+ .33 
+
+n=length(temp)
+times=1:n
+
+# Plot raw data and linear fit
+pdf('../report/figs/problem_7/temp_ols.pdf')
+plot(times,temp)
+lines(times,temp)
+ols=lm(temp~times)
+lines(times,temp-ols$resid,col='blue')
+
+# Plot ACF and PACF of residuals
+olsres=lm(temp~times)$resid
+pdf('../report/figs/problem_7/temp_acf.pdf')
+acf(olsres)
+pdf('../report/figs/problem_7/temp_pacf.pdf')
+pacf(olsres)
+
+pdf('../report/figs/problem_7/temp_ar1_lin.pdf')
+plot(times,temp)
+lines(times,temp)
+
+#Fit linear trend with AR(1) errors
+arfit=arima(temp,order=c(1,0,0),xreg=times)
+arfit
+lines(times,temp-arfit$resid,col="red")  #overly the predicted points
+
+# Predict next two observations
+predict(arfit,n.ahead=2,newxreg=c(n+1,n+2))
+pred1=arfit$coef[2]+(n+1)*arfit$coef[3]+arfit$coef[1]*(temp[n]-arfit$coef[2]-arfit$coef[3]*n)
+pred1
+sqrt(arfit$sigma)
+pred2=arfit$coef[2]+(n+2)*arfit$coef[3]+arfit$coef[1]^2*(temp[n]-arfit$coef[2]-arfit$coef[3]*n)
+pred2
+sqrt(arfit$sigma*(1+arfit$coef[1]^2))
+
+
