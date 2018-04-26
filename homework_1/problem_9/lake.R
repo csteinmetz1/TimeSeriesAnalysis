@@ -99,6 +99,7 @@ lake=scan()
 9.96
 
 times=1:98
+n=length(times)
 
 # Perform cubic fit
 X=cbind(times,times^2,times^3)
@@ -117,5 +118,3 @@ cubic_res=lm(lake~X)$resid
 pdf('../report/figs/problem_9/cubic_fit_ACF.pdf')
 acf(cubic_res)
 Box.test(cubic_res, lag=15, fitdf=0,type="Ljung")
-
-
